@@ -16,8 +16,9 @@ def get_size():
 
 def get_body_image(context, width, height, debug):
     if debug:
-        # example = ['example_debug_1.jpg', 'example_debug_2.jpg']
-        example = ['example_debug_2.jpg']
+        example_1 = 'example_debug_1.jpg'
+        example_2 = 'example_debug_2.png'
+        example = [example_1, example_2]
         debug_body_image_name = random.choice(example)
         debug_body_image_address = get_contents_folder() + r'/' + debug_body_image_name
         body_image = Image.open(debug_body_image_address)
@@ -29,18 +30,21 @@ def get_body_image(context, width, height, debug):
 
 
 def body_image_adjust(body_image, width, height):
-    width = width * get_size()
-    height = height * get_size()
     body_image_width, body_image_height = body_image.size
     body_image_ratio = body_image_width / body_image_height
-    body_image_height_new = height
-    body_image_width_new = round(body_image_height_new * body_image_ratio)
-    if body_image_width > body_image_height:
-        body_image_width_new = width
-        body_image_height_new = round(body_image_width_new / body_image_ratio)
-    body_image_new_size = (body_image_width_new, body_image_height_new)
-    body_image_image = body_image.resize(body_image_new_size, Image.ANTIALIAS)
-    return body_image_image
+    if body_image_ratio >= 1:
+        body_image_width_new = width * get_size()
+        body_image_height_new = round(body_image_width_new * (1 / body_image_ratio))
+        body_image_height_new_real_size = body_image_height_new / get_size() 
+        if body_image_height_new_real_size > height:
+            taxa_de_reducao = height/body_image_height_new_real_size-1
+            body_image_width_new = round(body_image_width_new * (1 + taxa_de_reducao))
+            body_image_height_new = round(body_image_height_new * (1 + taxa_de_reducao))
+    else:
+        body_image_height_new = height * get_size()
+        body_image_width_new = round(body_image_height_new * body_image_ratio)
+    size = (body_image_width_new, body_image_height_new)
+    return body_image.resize(size, Image.ANTIALIAS)
 
 
 def write_text_center(image, coordinate, text, font, fill, font_size):

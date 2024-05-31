@@ -44,7 +44,7 @@ def get_title(layout_title):
 def get_cliente_nome(context_raw):
     cliente_nome = context_raw['cliente_nome']
     customer_name = 'CLIENTE: {}'.format(cliente_nome).upper()
-    customer_name = truncatechars(customer_name, 44)
+    customer_name = truncatechars(customer_name, 60)
     customer_name = customer_name.strip()
     return customer_name
 
@@ -52,7 +52,7 @@ def get_cliente_nome(context_raw):
 def get_cliente_contato(context_raw):
     cliente_contato = context_raw['cliente_contato']
     customer_contact = 'CONTATO: {}'.format(cliente_contato)
-    customer_contact = truncatechars(customer_contact, 44)
+    customer_contact = customer_contact
     customer_contact = customer_contact.strip()
     return customer_contact
 
@@ -67,9 +67,10 @@ def get_responsavel_nome(context_raw):
 def get_responsavel_contato(context_raw):
     responsavel_contato = context_raw['responsavel_contato']
     responsavel_contato = 'CONTATO: {}'.format(responsavel_contato).upper()
-    responsavel_contato = truncatechars(responsavel_contato, 44)
+    responsavel_contato = responsavel_contato
     responsavel_contato = responsavel_contato.strip()
     return responsavel_contato
+
 
 def truncatechars(string, width=10):
     return textwrap.shorten(string, width=width, placeholder="...")

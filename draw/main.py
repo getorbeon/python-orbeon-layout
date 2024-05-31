@@ -34,7 +34,7 @@ def draw(context_raw, debug=False):
     a4 = add_margin(a4)
     # convert_to_pdf_a4_convert(a4, context)
     if debug:
-        path = Path(__file__).parent.parent.joinpath('examples').joinpath('ex.png')
+        path = Path(__file__).parent.parent.joinpath('generated_examples').joinpath('ex.png')
         a4.save(path)
     else:
         print('Tá em producao, porra!')

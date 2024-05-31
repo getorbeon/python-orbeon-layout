@@ -15,7 +15,7 @@ def shipping_title(image, context):
         'top': 0,
     }
     style = {
-        'fill': '#f7ffd9',
+        'fill': '#fa985f',
         'outline': '#000',
         'stroke': 1,
     }
@@ -28,6 +28,7 @@ def shipping_title(image, context):
 
 
 def shipping_body(image, context):
+    metodo_text = context['entrega']['metodo'] 
     coordinate = {
         'width': 106,
         'height': 20,
@@ -37,6 +38,11 @@ def shipping_body(image, context):
         'top': 2,
     }
     write_draw_rectangle(image, coordinate)
+
+    if 'RETIRADA' in metodo_text.upper():
+        shipping_body_retirada(image)
+    else:
+        print('Endereço de Entrega')
     # products_text = ''
     # for product in context['products']:
     #     product_text = product
@@ -48,3 +54,27 @@ def shipping_body(image, context):
     # coordinate['offset_left'] = coordinate['offset_left'] + 2
 
 # write_text_left_top(image, coordinate, value_text, value_font, value_font_fill, value_font_size)
+
+
+def shipping_body_retirada(image):
+    coordinate = {
+        'width': 106,
+        'height': 20,
+        'offset_left': 190,
+        'offset_top': 7,
+        'left': 2,
+        'top': 4,
+    }
+    value_text = 'ENDEREÇO PARA RETIRADA DA MERCADORIA:'
+    value_font = 'MYRIADPRO-BOLD.OTF'
+    value_font_fill = '#000'
+    value_font_size = 9
+    write_text_left_top(image, coordinate, value_text, value_font, value_font_fill, value_font_size)
+
+
+def shipping_body_entrega():
+    pass
+
+
+def shipping_body_endereco(image):
+    pass
