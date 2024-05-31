@@ -3,7 +3,7 @@ from ..import utils
 
 def shipping(image, width, context):
     wrapper(image, width)
-    title(image, width)
+    title(context, image, width)
     body(image, width, context)
 
 
@@ -24,7 +24,7 @@ def wrapper(image, width):
     utils.write_draw_rectangle_style(image, coordinate, style)
 
 
-def title(image, width):
+def title(context, image, width):
     coordinate = {
         'width': width,
         'height': 10,
@@ -38,8 +38,8 @@ def title(image, width):
         'outline': '#000',
         'stroke': 1,
     }
+    title_text = 'ENTREGA'
     utils.write_draw_rectangle_style(image, coordinate, style)
-    title_text = 'RETIRADA'
     title_font = 'MYRIADPRO-BOLD.OTF'
     title_font_fill = '#000'
     title_font_size = 15

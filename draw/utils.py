@@ -2,12 +2,12 @@ import os
 from io import BytesIO
 import base64
 import qrcode
+import random 
 
 from io import BytesIO
 from PIL import Image, ImageDraw, ImageOps, ImageFont
 
-from django.utils import timezone
-
+import datetime
 
 def get_size():
     size = 5
@@ -16,7 +16,9 @@ def get_size():
 
 def get_body_image(context, width, height, debug):
     if debug:
-        debug_body_image_name = '1200x825.jpg'
+        # example = ['example_debug_1.jpg', 'example_debug_2.jpg']
+        example = ['example_debug_2.jpg']
+        debug_body_image_name = random.choice(example)
         debug_body_image_address = get_contents_folder() + r'/' + debug_body_image_name
         body_image = Image.open(debug_body_image_address)
     else:
@@ -206,7 +208,8 @@ def get_contents_folder():
 
 def get_image_name():
     now_format = '%Y_%m_%d_%H%M%S_%f'
-    now_string = timezone.localtime(timezone.now()).strftime(now_format)
+    now = datetime.datetime.now()
+    now_string = now.strftime(now_format)
     layout_file_name = '{}_{}'.format('layout', now_string)
     return layout_file_name
 
