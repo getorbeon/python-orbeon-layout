@@ -1,7 +1,6 @@
 import os
 from io import BytesIO
 import base64
-import qrcode
 import random 
 
 from io import BytesIO
@@ -145,21 +144,6 @@ def get_logo_image(width):
     new_size = (logo_width_new, logo_height_new)
     logo_image = logo_image.resize(new_size, Image.ANTIALIAS)
     return logo_image
-
-
-def get_qrcode_image(data, width):
-    width = int(width * get_size() / 3)
-    image = qrcode_generate_image(data)
-    resized_image = resize_image(image, width)
-    return resized_image
-
-
-def qrcode_generate_image(data):
-    qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_L, box_size=10, border=0)
-    qr.add_data(data)
-    qr.make(fit=True)
-    image = qr.make_image(fill_color="#000", back_color="#fff")
-    return image
 
 
 def add_border_to_image(image, border, color):
