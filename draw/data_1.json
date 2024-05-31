@@ -1,9 +1,8 @@
 {
-    "order_id": 1,
-    "qrcode_url": "https://scapole.com",
     "pid": "1000",
     "layout_id": "15/20",
     "title": "CAMISETA",
+    "financeiro": "LIBERADO",
     "data_inicio": "31/05/2024 09:35",
     "data_retirada": "31/05/24 16:35",
     "cliente_nome": "JOÃO PEDRO DA SILVA COSTA QUENTE DO SUL E DO NOTE DO AMAZONAS",
@@ -22,6 +21,5 @@
         "ponto_de_referencia": "Próximo do supermercado",
         "observacoes": "Primeiro"
     },
-    "body_image": null,
-    "financeiro": "LIBERADO"
+    "body_image": null
 }

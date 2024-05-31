@@ -1,17 +1,9 @@
 import json
 from pathlib import Path
 from draw.main import draw
-
-
-def get_context_example_data():
-    data = {}
-    data_address = Path(__file__).parent.joinpath('draw').joinpath('data_1.json')
-    with data_address.open('r', encoding='utf8') as json_data:
-        data = json.load(json_data)
-        json_data.close()
-    return data
+from draw.data import get_context_example_data
 
 
 if __name__ == '__main__':
-    context = get_context_example_data()
+    context = get_context_example_data('data_1.json')
     draw(context, True)
