@@ -2,6 +2,8 @@ from flask import Flask, request
 from flask_restful import Resource, Api
 
 from draw.main import draw
+from draw.auth import authenticate
+
 
 app = Flask(__name__)
 
@@ -17,18 +19,28 @@ class Welcome(Resource):
 class LayoutGenerator(Resource):
 
     def post(self):
+
         status_code = 500
+        
         response_data = {
             'success': False,
             'files': None,
             'error': None,
         }
+
         try:
             json_data = request.get_json()
-            response_data = draw(json_data)
-            status_code = 201
+            authenticated = authenticate(json_data)
+            print(authenticated)
+            if authenticated:
+                response_data = draw(json_data)
+                status_code = 201
+            else:
+                status_code = 401
+                response_data['error'] = 'Sem token ou token inválido.'
         except Exception as e:
             response_data['error'] = str(e)
+
         return response_data, status_code
 
 
