@@ -5,9 +5,9 @@ from draw.main import draw
 from draw.auth import authenticate
 
 
-app = Flask(__name__)
+application = Flask(__name__)
 
-api = Api(app)
+api = Api(application)
 
 
 class Welcome(Resource):
@@ -31,7 +31,6 @@ class LayoutGenerator(Resource):
         try:
             json_data = request.get_json()
             authenticated = authenticate(json_data)
-            print(authenticated)
             if authenticated:
                 response_data = draw(json_data)
                 status_code = 201
@@ -49,5 +48,5 @@ api.add_resource(LayoutGenerator, '/layout-generator')
 
 
 if __name__ == '__main__':
-    app.run(debug=False)
-    app.run()
+    # application.run(debug=False)
+    application.run()
