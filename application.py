@@ -5,9 +5,9 @@ from draw.main import draw
 from draw.auth import authenticate
 
 
-app = Flask(__name__)
+application = Flask(__name__)
 
-api = Api(app)
+api = Api(application)
 
 
 class Welcome(Resource):
@@ -44,5 +44,5 @@ api.add_resource(LayoutGenerator, '/layout-generator')
 
 
 if __name__ == '__main__':
-    app.run(debug=config('DEBUG', default=False, cast=bool))
-    app.run()
+    application.run(debug=config('DEBUG', default=False, cast=bool))
+    application.run()
