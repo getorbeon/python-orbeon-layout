@@ -1,44 +1,23 @@
 import textwrap
-import datetime
 
 
 def get_context_clean(context_raw):
     context = {
         'pid':                  context_raw['pid'],
         'layout':               context_raw['layout_id'],
-        'title':         get_title(context_raw['title']),
-        'due_date':             get_data_retirada(context_raw['data_retirada']),
-        'start_date':           get_data_inicio(),
+        'title':                truncatechars(context_raw['title'], 35).upper(),
+        'data_inicio':          context_raw['data_inicio'],
+        'data_conclusao':       context_raw['data_conclusao'],
         'customer_name':        get_cliente_nome(context_raw),
         'customer_contact':     get_cliente_contato(context_raw),
         'responsible_name':     get_responsavel_nome(context_raw),
         'responsible_contact':  get_responsavel_contato(context_raw),
-        'body_image':           context_raw['body_image'],
+        'body_base64':          context_raw['body_image_base64'],
+        'logo_base64':          context_raw['logo_image_base64'],
         'financial':            context_raw['financeiro'].upper().strip(),
-        'entrega':              context_raw['entrega']
+        'entrega':              context_raw['entrega'],
     }
     return context
-
-
-def get_data_inicio():
-    now = datetime.datetime.now()
-    now_str = now.strftime('%d/%m/%y %H:%M')
-    start_date = 'INÍCIO: {}'.format(now_str)
-    return start_date
-
-
-def get_data_retirada(data_retirada):
-    if data_retirada:
-        pass
-    else:
-        data_retirada = 'NÃO INFORMADA'
-    data_retirada = 'CONCLUSÂO: {}'.format(data_retirada)
-    return data_retirada
-
-
-def get_title(layout_title):
-    layout_title = truncatechars(layout_title, 35).upper()
-    return layout_title
 
 
 def get_cliente_nome(context_raw):

@@ -1,31 +1,25 @@
+import datetime
 import os
 from io import BytesIO
 import base64
-import random 
 
-from io import BytesIO
 from PIL import Image, ImageDraw, ImageOps, ImageFont
 
-import datetime
 
 def get_size():
     size = 5
     return size
 
 
-def get_body_image(context, width, height, debug):
-    if debug:
-        example_1 = 'example_debug_1.jpg'
-        example_2 = 'example_debug_2.png'
-        example = [example_1, example_2]
-        debug_body_image_name = random.choice(example)
-        debug_body_image_address = get_contents_folder() + r'/' + debug_body_image_name
-        body_image = Image.open(debug_body_image_address)
+def get_body_image(context, width, height):
+    body_image_base64 = context['body_base64']
+    if body_image_base64:
+        body_image_base64_bytes = base64.b64decode(body_image_base64)
+        body_image = Image.open(BytesIO(body_image_base64_bytes))
     else:
-        body_image_ctx = context['body_image']
-        body_image_data = body_image_ctx.read()
-        body_image = Image.open(BytesIO(body_image_data))
-    return body_image_adjust(body_image, width, height)
+        raise Exception('Não é possível gerar o layout, pois não há uma imagem para o corpo do layout.')
+    body_image_adjusted = body_image_adjust(body_image, width, height)
+    return body_image_adjusted
 
 
 def body_image_adjust(body_image, width, height):

@@ -1,5 +1,3 @@
-from pathlib import Path
-
 from .context import get_context_clean
 from .utils import add_margin
 
@@ -13,16 +11,17 @@ from .regions.logo import logo
 from .regions.body import body
 from .regions.shopping import shipping_title, shipping_body
 
-from .convert_to_pdf_a4 import convert as convert_to_pdf_a4_convert
+from .convert import convert
 
 
-def draw(context_raw, debug=False):
+def draw(context_raw):
+    result = get_initial_result()
     context = get_context_clean(context_raw)
     a4 = a4i()
     pid(a4, context)
     layout(a4, context)
     financial(a4, 57, context)
-    logo(a4)
+    logo(a4, context)
     data_inicio(a4, context)
     data_conclusao(a4, context)
     cliente(a4, context)
@@ -30,11 +29,29 @@ def draw(context_raw, debug=False):
     shipping_title(a4, context)
     shipping_body(a4, context)
     title(a4, context)
-    body(a4, context, debug)
+    body(a4, context)
     a4 = add_margin(a4)
-    # convert_to_pdf_a4_convert(a4, context)
-    if debug:
-        path = Path(__file__).parent.parent.joinpath('generated_examples').joinpath('ex.png')
-        a4.save(path)
-    else:
-        print('Tá em producao, porra!')
+    result = get_final_result(a4, result)
+    return result
+
+
+def get_initial_result():
+    result = {
+        'success': False,
+        'filename': None,
+        'files': {
+            'img': None,
+            'pdf': None,
+        },
+        'error': None,
+    }
+    return result
+
+
+def get_final_result(a4, result):
+    filename, img, pdf = convert(a4)
+    result['filename'] = filename
+    result['files']['img'] = img
+    result['files']['pdf'] = pdf
+    result['success'] = True
+    return result

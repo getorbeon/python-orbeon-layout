@@ -5,7 +5,7 @@ from ..utils import (
 )
 
 
-def body(image, context, debug):
+def body(image, context):
     coordinate = {
         'width': 296,
         'height': 166,
@@ -15,12 +15,12 @@ def body(image, context, debug):
         'top': 2,
     }
     write_draw_rectangle(image, coordinate)
-    body_image_insert(image, coordinate, context, debug)
+    body_image_insert(image, coordinate, context)
 
 
-def body_image_insert(image, coordinate, context, debug):
+def body_image_insert(image, coordinate, context):
     width_ = coordinate['width'] - 2
     height_ = coordinate['height'] - 2
-    body_image = get_body_image(context, width_, height_, debug)
+    body_image = get_body_image(context, width_, height_)
     box = get_center_middle_image_box(body_image, coordinate)
     image.paste(body_image, box)

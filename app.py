@@ -2,31 +2,38 @@ from flask import Flask, request
 from flask_restful import Resource, Api
 
 from draw.main import draw
-from draw.data import get_context_example_data
-
 
 app = Flask(__name__)
 
 api = Api(app)
 
 
-class Main(Resource):
+class Welcome(Resource):
 
     def get(self):
-        context = get_context_example_data('data_1.json')
-        draw(context, True)
-        return context
+        return {'working': True}, 200
+
+
+class LayoutGenerator(Resource):
 
     def post(self):
-        json_data = request.get_json(force=True)
-        print(json_data)
-        data = {
-            'success': 'loading...'
+        status_code = 500
+        response_data = {
+            'success': False,
+            'files': None,
+            'error': None,
         }
-        return data, 201
+        try:
+            json_data = request.get_json()
+            response_data = draw(json_data)
+            status_code = 201
+        except Exception as e:
+            response_data['error'] = str(e)
+        return response_data, status_code
 
 
-api.add_resource(Main, '/')
+api.add_resource(Welcome, '/')
+api.add_resource(LayoutGenerator, '/layout-generator')
 
 
 if __name__ == '__main__':
