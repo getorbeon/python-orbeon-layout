@@ -20,18 +20,16 @@ def convert(image):
     filename = get_image_name()
 
     # img
-    img_name = filename + '.png'
     img_data = byte_io.getvalue()
     img = {
-        'filename': img_name,
+        'filename': filename + '.png',
         'data': encode_file_to_base64(img_data),
     }
 
     # pdf
-    pdf_name = filename + '.pdf'
     pdf_data = layout_pdf_a4
     pdf = {
-        'filename': pdf_name,
+        'filename': filename + '.pdf',
         'data': encode_file_to_base64(pdf_data),
     }
 
