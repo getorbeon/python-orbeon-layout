@@ -1,13 +1,13 @@
 from flask import Flask, request
 from flask_restful import Resource, Api
-
+from decouple import config
 from draw.main import draw
 from draw.auth import authenticate
 
 
-application = Flask(__name__)
+app = Flask(__name__)
 
-api = Api(application)
+api = Api(app)
 
 
 class Welcome(Resource):
@@ -19,15 +19,12 @@ class Welcome(Resource):
 class LayoutGenerator(Resource):
 
     def post(self):
-
         status_code = 500
-        
         response_data = {
             'success': False,
             'files': None,
             'error': None,
         }
-
         try:
             json_data = request.get_json()
             authenticated = authenticate(json_data)
@@ -39,7 +36,6 @@ class LayoutGenerator(Resource):
                 response_data['error'] = 'Sem token ou token inválido.'
         except Exception as e:
             response_data['error'] = str(e)
-
         return response_data, status_code
 
 
@@ -48,5 +44,5 @@ api.add_resource(LayoutGenerator, '/layout-generator')
 
 
 if __name__ == '__main__':
-    # application.run(debug=False)
-    application.run()
+    app.run(debug=config('DEBUG', default=False, cast=bool))
+    app.run()
