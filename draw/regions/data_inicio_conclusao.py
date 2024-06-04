@@ -20,6 +20,7 @@ def data_inicio(image, context):
     }
     write_draw_rectangle_style(image, coordinate, style)
     due_date_value_text = context['data_inicio']
+    due_date_value_text = 'INÍCIO: ' + due_date_value_text
     due_date_value_font = 'MYRIADPRO-BOLD.OTF'
     due_date_value_font_fill = '#000'
     due_date_value_font_size = 10
@@ -42,6 +43,7 @@ def data_conclusao(image, context):
     }
     write_draw_rectangle_style(image, coordinate, style)
     due_date_value_text = context['data_conclusao']
+    due_date_value_text = 'CONCLUSÃO: ' + due_date_value_text
     due_date_value_font = 'MYRIADPRO-BOLD.OTF'
     due_date_value_font_fill = '#000'
     due_date_value_font_size = 10
