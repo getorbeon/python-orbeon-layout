@@ -5,7 +5,8 @@ from ..utils import (
 )
 
 
-def financial(image, width, context):
+def financial(image, context):
+    width = 57
     financial_title(image, width)
     financial_body(image, width, context)
 

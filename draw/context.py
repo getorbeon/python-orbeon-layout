@@ -15,7 +15,7 @@ def get_context_clean(context_raw):
         'body_base64':          context_raw['body_image_base64'],
         'logo_base64':          context_raw['logo_image_base64'],
         'financial':            context_raw['financeiro'].upper().strip(),
-        'entrega':              context_raw['entrega'],
+        'shipping':             context_raw['shipping'],
     }
     return context
 

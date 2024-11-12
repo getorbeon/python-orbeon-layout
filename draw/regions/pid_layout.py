@@ -2,7 +2,7 @@ from ..utils import write_draw_rectangle, write_text_center
 
 
 def pid(image, context):
-    
+
     # TITLE
     coordinate = {
         'width': 27,

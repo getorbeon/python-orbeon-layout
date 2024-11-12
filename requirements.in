@@ -1,5 +1,6 @@
 Flask
 flask-restful
 python-decouple
-Pillow==9.4.0
 img2pdf==0.4.4
+pillow==11.0.0
+python-dotenv

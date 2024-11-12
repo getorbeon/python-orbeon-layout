@@ -23,13 +23,13 @@ def shipping_title(image, context):
     value_font = 'MYRIADPRO-BOLD.OTF'
     value_font_fill = '#000'
     value_font_size = 11
-    text = context['entrega']['metodo'] 
+    text = context['shipping']['method'] 
     write_text_center(image, coordinate, text, value_font, value_font_fill, value_font_size)
 
 
 def shipping_body(image, context):
-    context_entrega = context['entrega'] 
-    context_metodo = context_entrega['metodo'] 
+    context_shipping = context['shipping'] 
+    context_method = context_shipping['method'].upper()
     coordinate = {
         'width': 106,
         'height': 20,
@@ -39,11 +39,11 @@ def shipping_body(image, context):
         'top': 2,
     }
     write_draw_rectangle(image, coordinate)
-    if 'RETIRADA' in context_metodo.upper():
+    if 'RETIRADA' in context_method:
         shipping_body_retirada(image)
     else:
         shipping_body_envio(image)
-    shipping_body_endereco_completo(image, context_entrega)
+    # shipping_body_endereco_completo(image, context_shipping)
 
 
 def shipping_body_retirada(image):

@@ -3,7 +3,12 @@ import os
 from io import BytesIO
 import base64
 
-from PIL import Image, ImageDraw, ImageOps, ImageFont
+from PIL import (
+    Image,
+    ImageDraw,
+    ImageOps,
+    ImageFont
+)
 
 
 def get_size():
@@ -11,40 +16,11 @@ def get_size():
     return size
 
 
-def get_body_image(context, width, height):
-    body_image_base64 = context['body_base64']
-    if body_image_base64:
-        body_image_base64_bytes = base64.b64decode(body_image_base64)
-        body_image = Image.open(BytesIO(body_image_base64_bytes))
-    else:
-        raise Exception('Não é possível gerar o layout, pois não há uma imagem para o corpo do layout.')
-    body_image_adjusted = body_image_adjust(body_image, width, height)
-    return body_image_adjusted
-
-
-def body_image_adjust(body_image, width, height):
-    body_image_width, body_image_height = body_image.size
-    body_image_ratio = body_image_width / body_image_height
-    if body_image_ratio >= 1:
-        body_image_width_new = width * get_size()
-        body_image_height_new = round(body_image_width_new * (1 / body_image_ratio))
-        body_image_height_new_real_size = body_image_height_new / get_size() 
-        if body_image_height_new_real_size > height:
-            taxa_de_reducao = height/body_image_height_new_real_size-1
-            body_image_width_new = round(body_image_width_new * (1 + taxa_de_reducao))
-            body_image_height_new = round(body_image_height_new * (1 + taxa_de_reducao))
-    else:
-        body_image_height_new = height * get_size()
-        body_image_width_new = round(body_image_height_new * body_image_ratio)
-    size = (body_image_width_new, body_image_height_new)
-    return body_image.resize(size, Image.ANTIALIAS)
-
-
 def write_text_center(image, coordinate, text, font, fill, font_size):
     font_size = int(font_size / 3 * get_size())
     draw = ImageDraw.Draw(image)
     font = get_font(font, font_size)
-    text_width, text_height = draw.textsize(text, font=font)
+    text_width, text_height = get_text_width_height(draw, text, font)
     rectangle_width = coordinate['width']
     width_mid = (rectangle_width * get_size() - text_width) / 2
     rectangle_height = coordinate['height']
@@ -59,7 +35,7 @@ def write_text_left(image, coordinate, text, font, fill, font_size):
     font_size = int(font_size / 3 * get_size())
     draw = ImageDraw.Draw(image)
     font = get_font(font, font_size)
-    text_width, text_height = draw.textsize(text, font=font)
+    text_width, text_height = get_text_width_height(draw, text, font)
     rectangle_width = coordinate['width']
     width_mid = (rectangle_width * get_size() - text_width) / 2
     rectangle_height = coordinate['height']
@@ -78,6 +54,13 @@ def write_text_left_top(image, coordinate, text, font, fill, font_size):
     y = (coordinate['offset_top'] + coordinate['top']) * get_size()
     xy = (x, y)
     draw.text(xy, text, align='left', font=font, fill=fill)
+
+
+def get_text_width_height(draw, text, font):
+    text_bbox = draw.textbbox((0, 0), text, font=font)
+    text_width = text_bbox[2] - text_bbox[0]
+    text_height = text_bbox[3] - text_bbox[1]
+    return text_width, text_height
 
 
 def break_fix(text, width, font, draw):
@@ -174,10 +157,63 @@ def get_center_middle_image_box(image, coordinate):
     # center / middle
     image_margin_center = (width - image_width) / 2
     image_margin_middle = (height - image_height) / 2
-    
+
     # box
     box_left = round(image_margin_center + offset_left + left) * get_size()
     box_top = round(image_margin_middle + offset_top + top) * get_size()
+    box = (box_left, box_top)
+
+    return box
+
+
+def get_center_middle_image_box_a(image, coordinate, scale=1):
+    # Coordenadas da caixa
+    width = coordinate['width']
+    height = coordinate['height']
+    top = coordinate['top']
+    left = coordinate['left']
+    offset_left = coordinate['offset_left']
+    offset_top = coordinate['offset_top']
+
+    # Tamanho da imagem ajustado pelo fator de escala
+    image_width, image_height = image.size
+    image_width /= scale
+    image_height /= scale
+
+    # Calcular margens centralizadas
+    image_margin_center = (width - image_width) / 2
+    image_margin_middle = (height - image_height) / 2
+
+    # Calcular posição da caixa
+    box_left = round(image_margin_center + offset_left + left)
+    box_top = round(image_margin_middle + offset_top + top)
+    box = (box_left, box_top)
+
+    return box
+
+
+def get_center_middle_image_box_b(image, coordinate):
+    # Extrai os dados da coordenada
+    width = coordinate['width']
+    height = coordinate['height']
+    top = coordinate['top']
+    left = coordinate['left']
+    offset_left = coordinate['offset_left']
+    offset_top = coordinate['offset_top']
+
+    # Tamanho da imagem considerando escala
+    scale = 1  # ajuste o valor conforme necessário
+    image_width, image_height = image.size
+    image_width /= scale
+    image_height /= scale
+
+    # Cálculo de centralização
+    image_margin_center = (width - image_width) / 2
+    image_margin_middle = (height - image_height) / 2
+
+    # Posição da caixa
+    box_left = round(image_margin_center + offset_left + left) * scale
+    box_top = round(image_margin_middle + offset_top + top) * scale
     box = (box_left, box_top)
 
     return box
@@ -212,52 +248,48 @@ def get_font(font_name, size):
 
 
 def write_draw_rectangle(image, coordinate):
-    
-    # margin
+    # Margin (posição inicial do retângulo)
     margin_left = coordinate['left']
     margin_top = coordinate['top']
 
-    # offsets
-    offset_top = coordinate['offset_top'] + margin_top
-    offset_left = coordinate['offset_left'] + margin_left
+    # Offsets (ajustes adicionais)
+    offset_top = coordinate['offset_top']
+    offset_left = coordinate['offset_left']
 
-    # width / height
+    # Calcula a posição inicial do retângulo aplicando margem e offset
+    top = margin_top + offset_top
+    left = margin_left + offset_left
+
+    # Define a largura e altura do retângulo sem somar os offsets
     width = coordinate['width']
     height = coordinate['height']
 
-    # somes calcs
-    width = width + offset_left
-    height = height + offset_top
-    top = offset_top
-    left = offset_left
-
-    # style
+    # Estilo do retângulo
     fill = '#fff'
     outline = '#000'
     stroke = 1
 
+    # Chama a função draw_rectangle com os valores corretos
     draw_rectangle(image, width, height, top, left, fill, outline, stroke)
 
 
+
 def write_draw_rectangle_style(image, coordinate, style):
-    
-    # margin
+    # Margin (posição inicial do retângulo)
     margin_left = coordinate['left']
     margin_top = coordinate['top']
 
-    # offsets
-    offset_top = coordinate['offset_top'] + margin_top
-    offset_left = coordinate['offset_left'] + margin_left
+    # Offsets (ajustes adicionais)
+    offset_top = coordinate['offset_top']
+    offset_left = coordinate['offset_left']
 
-    # width / height
+    # Calcula a posição inicial do retângulo aplicando margem e offset
+    top = margin_top + offset_top
+    left = margin_left + offset_left
+
+    # Define a largura e altura do retângulo sem somar os offsets
     width = coordinate['width']
     height = coordinate['height']
-
-    # somes calcs
-    width = width + offset_left
-    height = height + offset_top
-    top = offset_top
-    left = offset_left
 
     # style
     fill = style['fill']
@@ -273,29 +305,18 @@ def draw_rectangle(image, width, height, top, left, fill, outline, stroke):
 
 
 def get_coordinate(width, height, left, top):
+    # Aplica o fator de escala ao tamanho e posição
+    width_scaled = width * get_size()
+    height_scaled = height * get_size()
+    left_scaled = left * get_size()
+    top_scaled = top * get_size()
 
-    # width & height
-    width = width * get_size()
-    height = height * get_size()  
+    # Calcula o canto superior esquerdo (x0, y0) e canto inferior direito (x1, y1)
+    x0, y0 = left_scaled, top_scaled  # Canto superior esquerdo
+    x1, y1 = x0 + width_scaled, y0 + height_scaled  # Canto inferior direito
 
-    # margin
-    left = left * get_size()
-    top = top * get_size()
-
-    # x
-    xa = width
-    xb = top
-    x = (xa, xb)
-
-    # y
-    ya = left
-    yb = height
-    y = (ya, yb)
-
-    # xy
-    xy = [x, y]
-
-    return xy
+    # Retorna os pontos na ordem correta para o Pillow
+    return [(x0, y0), (x1, y1)]
 
 
 def add_margin(image):
