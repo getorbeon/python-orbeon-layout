@@ -5,15 +5,15 @@ from ..import utils
 
 def a4():
 
-    size = utils.get_size()
+    scale = utils.SCALE
 
     A4H = 210
     
     A4W = 297
 
-    width = A4W * size
+    width = A4W * scale
 
-    height = A4H * size
+    height = A4H * scale
 
     a4_image_fill = 'white'
 

@@ -19,7 +19,8 @@ def cliente(image, context):
         'stroke': 1,
     }
     write_draw_rectangle_style(image, coordinate, style)
-    value_text = context['customer_name'] + '\n' + context['customer_contact']
+    customer_name = context['customer_name']
+    value_text = customer_name[:55] + '\n' + context['customer_contact']
     value_font = 'MYRIADPRO-REGULAR.OTF'
     value_font_fill = '#000'
     value_font_size = 10

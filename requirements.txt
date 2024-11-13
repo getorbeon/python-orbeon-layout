@@ -38,9 +38,12 @@ pikepdf==9.4.0
     # via img2pdf
 pillow==11.0.0
     # via
+    #   -r requirements.in
     #   img2pdf
     #   pikepdf
 python-decouple==3.8
+    # via -r requirements.in
+python-dotenv==1.0.1
     # via -r requirements.in
 pytz==2024.2
     # via flask-restful

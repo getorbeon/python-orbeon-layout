@@ -44,5 +44,5 @@ api.add_resource(LayoutGenerator, '/layout-generator')
 
 
 if __name__ == '__main__':
-    application.run(debug=config('DEBUG', default=False, cast=bool))
-    application.run()
+    debug = config('DEBUG', default=False, cast=bool)
+    application.run(debug=debug)

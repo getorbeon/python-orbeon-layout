@@ -5,6 +5,12 @@ from ..utils import (
     write_draw_rectangle_style
 )
 
+
+def shipping(a4, context):
+    shipping_title(a4, context)
+    shipping_body(a4, context)
+
+
 def shipping_title(image, context):
     coordinate = {
         'width': 106,
@@ -39,46 +45,34 @@ def shipping_body(image, context):
         'top': 2,
     }
     write_draw_rectangle(image, coordinate)
+
+    retirada = False
     if 'RETIRADA' in context_method:
-        shipping_body_retirada(image)
+        retirada = True
+    shipping_send(image, retirada)
+    shipping_address(image, context_shipping)
+
+
+def shipping_send(image, retirada=False):
+    coordinate = {
+        'width': 106,
+        'height': 20,
+        'offset_left': 190,
+        'offset_top': 7,
+        'left': 2,
+        'top': 4,
+    }
+    if retirada:
+        value_text = 'ENDEREÇO PARA "RETIRADA" DA MERCADORIA:'
     else:
-        shipping_body_envio(image)
-    # shipping_body_endereco_completo(image, context_shipping)
-
-
-def shipping_body_retirada(image):
-    coordinate = {
-        'width': 106,
-        'height': 20,
-        'offset_left': 190,
-        'offset_top': 7,
-        'left': 2,
-        'top': 4,
-    }
-    value_text = 'ENDEREÇO PARA "RETIRADA" DA MERCADORIA:'
+        value_text = 'ENDEREÇO DE "ENVIO" DA MERCADORIA:'
     value_font = 'MYRIADPRO-BOLD.OTF'
     value_font_fill = '#bf1515'
     value_font_size = 9
     write_text_left_top(image, coordinate, value_text, value_font, value_font_fill, value_font_size)
 
 
-def shipping_body_envio(image):
-    coordinate = {
-        'width': 106,
-        'height': 20,
-        'offset_left': 190,
-        'offset_top': 7,
-        'left': 2,
-        'top': 4,
-    }
-    value_text = 'ENDEREÇO DE "ENVIO" DA MERCADORIA:'
-    value_font = 'MYRIADPRO-BOLD.OTF'
-    value_font_fill = '#bf1515'
-    value_font_size = 9
-    write_text_left_top(image, coordinate, value_text, value_font, value_font_fill, value_font_size)
-
-
-def shipping_body_endereco_completo(image, context):
+def shipping_address(image, context):
     offset_left_default = 190
     value_font_fill = '#000'
     value_font_size = 8
@@ -92,37 +86,46 @@ def shipping_body_endereco_completo(image, context):
         'left': 2,
         'top': 8,
     }
+
+    public_place = context['public_place']
+    number = context['number']
+    complement = context['complement']
+    neighborhood = context['neighborhood']
+    city = context['city']
+    state_code = context['state_code']
+    postal_code = '30190110'
+    location_reference = context['location_reference']
+    notes = context['notes']
+
     write_text_left_top(image, coordinate, 'ENDEREÇO: ', font_bold, value_font_fill, value_font_size)
-    value_text = f"{context['logradouro']}, NÚMERO: {context['numero']}"
-    complemento = context['complemento']
-    if complemento:
-        value_text = f'{value_text} | {complemento}'.upper()
+
+    value_text = f"{public_place}, NÚMERO: {number}"
+    if complement:
+        value_text = f'{value_text} | {complement}'.upper()
     coordinate['offset_left'] = coordinate['offset_left'] + 16
     write_text_left_top(image, coordinate, value_text, font_regular, value_font_fill, value_font_size)
-    
+
     coordinate['offset_left'] = offset_left_default
     coordinate['offset_top'] = coordinate['offset_top'] + 3
     write_text_left_top(image, coordinate, 'BAIRRO | CIDADE:', font_bold, value_font_fill, value_font_size)
-    
+
     coordinate['offset_left'] = coordinate['offset_left'] + 23
-    text = f"{context['bairro']} | {context['cidade']}"
+    text = f"{neighborhood} | {city}"
     write_text_left_top(image, coordinate, text.upper(), font_regular, value_font_fill, value_font_size)
-    
+
     coordinate['offset_top'] = coordinate['offset_top'] + 3
     coordinate['offset_left'] = offset_left_default
     write_text_left_top(image, coordinate, 'UF - CEP:', font_bold, value_font_fill, value_font_size)
     
     coordinate['offset_left'] = coordinate['offset_left'] + 11
-    text = f"{context['uf']} - {context['cep']}".upper()
+    text = f"{state_code} - {postal_code}".upper()
     write_text_left_top(image, coordinate, text, font_regular, value_font_fill, value_font_size)
 
     coordinate['offset_top'] = coordinate['offset_top'] + 3
     coordinate['offset_left'] = offset_left_default
     write_text_left_top(image, coordinate, 'REF. | OBS.:', font_bold, value_font_fill, value_font_size)
 
-    referenciar = context['ponto_de_referencia']
-    observacoes = context['observacoes']
-    text = f"{referenciar} | {observacoes}"
+    text = f"{location_reference} | {notes}"
     text = text.upper()
     coordinate['offset_left'] = coordinate['offset_left'] + 14
     write_text_left_top(image, coordinate, text, font_regular, value_font_fill, value_font_size)

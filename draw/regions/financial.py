@@ -6,15 +6,15 @@ from ..utils import (
 
 
 def financial(image, context):
-    width = 57
-    financial_title(image, width)
-    financial_body(image, width, context)
+    height = 8
+    financial_title(image, 28, height)
+    financial_body(image, 29, height, context)
 
 
-def financial_title(image, width):
+def financial_title(image, width, height):
     coordinate = {
         'width': width,
-        'height': 10,
+        'height': height,
         'offset_left': 0,
         'offset_top': 21,
         'left': 0,
@@ -24,11 +24,11 @@ def financial_title(image, width):
     pid_title_text = 'FINANCEIRO'
     pid_title_font = 'MYRIADPRO-BOLD.OTF'
     pid_title_font_fill = '#000'
-    pid_title_font_size = 15
+    pid_title_font_size = 12
     write_text_center(image, coordinate, pid_title_text, pid_title_font, pid_title_font_fill, pid_title_font_size)
 
 
-def financial_body(image, width, context):
+def financial_body(image, width, height, context):
     financeiro_status = context['financial'].upper()
     financeiro_fill = 'yellow'
     pid_title_font_fill = '#000'
@@ -37,9 +37,9 @@ def financial_body(image, width, context):
         pid_title_font_fill = '#fff'
     coordinate = {
         'width': width,
-        'height': 10,
-        'offset_left': 0,
-        'offset_top': 31,
+        'height': height,
+        'offset_left': width - 1,
+        'offset_top': 21,
         'left': 0,
         'top': 0,
     }
@@ -51,5 +51,5 @@ def financial_body(image, width, context):
     write_draw_rectangle_style(image, coordinate, style)
     pid_title_text = financeiro_status
     pid_title_font = 'MYRIADPRO-BOLD.OTF'
-    pid_title_font_size = 15
+    pid_title_font_size = 12
     write_text_center(image, coordinate, pid_title_text, pid_title_font, pid_title_font_fill, pid_title_font_size)

@@ -5,7 +5,7 @@ def pid(image, context):
 
     # TITLE
     coordinate = {
-        'width': 27,
+        'width': 28,
         'height': 10,
         'offset_left': 0,
         'offset_top': 0,
@@ -21,7 +21,7 @@ def pid(image, context):
 
     # VALUE
     coordinate = {
-        'width': 27,
+        'width': 28,
         'height': 10,
         'offset_left': 0,
         'offset_top': 0 + 10 - 1,

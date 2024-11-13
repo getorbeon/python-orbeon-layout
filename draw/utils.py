@@ -15,6 +15,7 @@ def get_size():
     size = 5
     return size
 
+SCALE = 5
 
 def write_text_center(image, coordinate, text, font, fill, font_size):
     font_size = int(font_size / 3 * get_size())

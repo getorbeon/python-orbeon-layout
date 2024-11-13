@@ -13,9 +13,9 @@ from ..utils import (
 def body(image, context):
     coordinate = {
         'width': 296,
-        'height': 166,
+        'height': 166 + 12,
         'offset_left': 0,
-        'offset_top': 41,
+        'offset_top': 41 - 12,
         'left': 0,
         'top': 2,
     }
