@@ -2,5 +2,4 @@ Flask
 flask-restful
 python-decouple
 python-dotenv
-img2pdf==0.4.4
 pillow==11.0.0
