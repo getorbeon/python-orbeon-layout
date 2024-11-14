@@ -14,7 +14,7 @@ colorama==0.4.6
     # via click
 deprecated==1.2.14
     # via pikepdf
-flask==3.0.3
+flask==3.1.0
     # via
     #   -r requirements.in
     #   flask-restful
@@ -34,7 +34,7 @@ markupsafe==3.0.2
     #   werkzeug
 packaging==24.2
     # via pikepdf
-pikepdf==9.4.0
+pikepdf==9.4.1
     # via img2pdf
 pillow==11.0.0
     # via
