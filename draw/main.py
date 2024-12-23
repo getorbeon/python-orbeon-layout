@@ -1,5 +1,4 @@
 from io import BytesIO
-
 from .context import get_context_clean
 from .utils import add_margin
 from .regions.a4 import a4 as a4i
@@ -11,9 +10,10 @@ from .regions.logo import logo
 from .regions.body import body
 from .regions.shipping import shipping
 from .convert import encode_file_to_base64, get_image_name
+from .save_file import save_file as save_file_
 
 
-def draw(context_raw):
+def draw(context_raw, save_file=False):
     context = get_context_clean(context_raw)
     a4 = a4i()
     pid(a4, context)
@@ -28,6 +28,7 @@ def draw(context_raw):
     body(a4, context)
     a4 = add_margin(a4)
     result = get_final_result(a4)
+    save_file_(result, save_file)
     return result
 
 

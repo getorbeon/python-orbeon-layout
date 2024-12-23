@@ -1,6 +1,6 @@
-# Layout
+# python-orbeon-layout
 
-API para geração de layouts padronizados em formatos PDF e imagem.
+Uma biblioteca simples e independente para geração de layouts padronizados em formatos PDF e imagem.
 
 ## Setup
 
@@ -8,7 +8,13 @@ API para geração de layouts padronizados em formatos PDF e imagem.
 python -m pip install --upgrade pip
 python -m pip install pip-tools
 pip-compile --strip-extras
-pip install -r requirements-dev.txt
+pip install -r requirements.txt
+```
+
+## Tests
+
+```bash
+python -m unittest discover
 ```
 
 ## Observações úteis

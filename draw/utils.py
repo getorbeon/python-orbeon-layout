@@ -36,9 +36,7 @@ def write_text_left(image, coordinate, text, font, fill, font_size):
     font_size = int(font_size / 3 * get_size())
     draw = ImageDraw.Draw(image)
     font = get_font(font, font_size)
-    text_width, text_height = get_text_width_height(draw, text, font)
-    rectangle_width = coordinate['width']
-    width_mid = (rectangle_width * get_size() - text_width) / 2
+    _, text_height = get_text_width_height(draw, text, font)
     rectangle_height = coordinate['height']
     height_mid = (rectangle_height * get_size() - text_height) / 2    
     x = (coordinate['offset_left'] + coordinate['left']) * get_size() + 5
@@ -243,8 +241,8 @@ def get_font(font_name, size):
     base = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     font_file_location_address = os.path.join(base, 'draw/contents/fonts')
     font_file_address = os.path.join(font_file_location_address, font_name)
-    font_file = open(font_file_address, 'rb')
-    font_file_bytes = BytesIO(font_file.read())
+    with open(font_file_address, 'rb') as font_file:
+        font_file_bytes = BytesIO(font_file.read())
     return ImageFont.truetype(font_file_bytes, size)
 
 

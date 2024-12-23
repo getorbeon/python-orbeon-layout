@@ -1,5 +1,1 @@
-Flask
-flask-restful
-python-decouple
-python-dotenv
 pillow==11.0.0

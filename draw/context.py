@@ -5,7 +5,7 @@ def get_context_clean(context_raw):
     context = {
         'pid':                  context_raw['pid'],
         'layout':               context_raw['layout_id'],
-        'title':                truncatechars(context_raw['title'], 35).upper(),
+        # 'title':                truncatechars(context_raw['title'], 35).upper(),
         'data_inicio':          context_raw['data_inicio'],
         'data_conclusao':       context_raw['data_conclusao'],
         'customer_name':        get_cliente_nome(context_raw),
