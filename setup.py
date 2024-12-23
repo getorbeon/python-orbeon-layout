@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="python-orbeon-layout",
-    version="1.0.0",
+    version="1.0.1",
     packages=find_packages(),
     description="Uma biblioteca simples e independente para geração de layouts padronizados em formatos PDF e imagem.",
     author="Edu Fontes",

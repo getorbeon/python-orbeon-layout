@@ -2,8 +2,8 @@
 import unittest
 
 from pathlib import Path
-from draw.main import draw
-from draw.example_data import get_example_data
+from python_orbeon_layout.main import draw
+from python_orbeon_layout.example_data import get_example_data
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 

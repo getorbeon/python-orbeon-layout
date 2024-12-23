@@ -1,4 +1,4 @@
-from draw.main import draw
+from python_orbeon_layout.main import draw
 
 
 def generator(data):

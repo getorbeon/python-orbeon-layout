@@ -239,7 +239,7 @@ def get_folder(path):
 
 def get_font(font_name, size):
     base = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    font_file_location_address = os.path.join(base, 'draw/contents/fonts')
+    font_file_location_address = os.path.join(base, 'python_orbeon_layout/contents/fonts')
     font_file_address = os.path.join(font_file_location_address, font_name)
     with open(font_file_address, 'rb') as font_file:
         font_file_bytes = BytesIO(font_file.read())
