@@ -12,7 +12,8 @@ class TestDraw(unittest.TestCase):
 
     def test_data(self):
         data = get_example_data()
-        self.assertIn('pid', data)
+        self.assertIn('sales_order_id', data)
+        self.assertIn('layout_id', data)
         self.assertIn('responsavel_nome', data)
         self.assertIn('responsavel_contato', data)
         self.assertIn('data_inicio', data)

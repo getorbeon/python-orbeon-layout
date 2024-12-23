@@ -2,55 +2,62 @@ import datetime
 import os
 from io import BytesIO
 import base64
-
+from pathlib import Path
 from PIL import (
     Image,
     ImageDraw,
     ImageOps,
     ImageFont
 )
-
-
-def get_size():
-    size = 5
-    return size
-
 SCALE = 5
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+def a4():
+    scale = SCALE
+    A4H = 210
+    A4W = 297
+    width = A4W * scale
+    height = A4H * scale
+    a4_image_fill = 'white'
+    a4_image = Image.new('RGB', (width, height), a4_image_fill)
+    return a4_image
+
 
 def write_text_center(image, coordinate, text, font, fill, font_size):
-    font_size = int(font_size / 3 * get_size())
+    font_size = int(font_size / 3 * SCALE)
     draw = ImageDraw.Draw(image)
     font = get_font(font, font_size)
     text_width, text_height = get_text_width_height(draw, text, font)
     rectangle_width = coordinate['width']
-    width_mid = (rectangle_width * get_size() - text_width) / 2
+    width_mid = (rectangle_width * SCALE - text_width) / 2
     rectangle_height = coordinate['height']
-    height_mid = (rectangle_height * get_size() - text_height) / 2    
-    x = (coordinate['offset_left'] + coordinate['left']) * get_size() + width_mid
-    y = (coordinate['offset_top'] + coordinate['top']) * get_size() + height_mid
+    height_mid = (rectangle_height * SCALE - text_height) / 2    
+    x = (coordinate['offset_left'] + coordinate['left']) * SCALE + width_mid
+    y = (coordinate['offset_top'] + coordinate['top']) * SCALE + height_mid
     xy = (x, y)
     draw.text(xy, text, align='center', font=font, fill=fill)
 
 
 def write_text_left(image, coordinate, text, font, fill, font_size):
-    font_size = int(font_size / 3 * get_size())
+    font_size = int(font_size / 3 * SCALE)
     draw = ImageDraw.Draw(image)
     font = get_font(font, font_size)
     _, text_height = get_text_width_height(draw, text, font)
     rectangle_height = coordinate['height']
-    height_mid = (rectangle_height * get_size() - text_height) / 2    
-    x = (coordinate['offset_left'] + coordinate['left']) * get_size() + 5
-    y = (coordinate['offset_top'] + coordinate['top']) * get_size() + height_mid
+    height_mid = (rectangle_height * SCALE - text_height) / 2    
+    x = (coordinate['offset_left'] + coordinate['left']) * SCALE + 5
+    y = (coordinate['offset_top'] + coordinate['top']) * SCALE + height_mid
     xy = (x, y)
     draw.text(xy, text, align='left', font=font, fill=fill)
 
 
 def write_text_left_top(image, coordinate, text, font, fill, font_size):
-    font_size = int(font_size / 3 * get_size())
+    font_size = int(font_size / 3 * SCALE)
     draw = ImageDraw.Draw(image)
     font = get_font(font, font_size)
-    x = (coordinate['offset_left'] + coordinate['left']) * get_size()
-    y = (coordinate['offset_top'] + coordinate['top']) * get_size()
+    x = (coordinate['offset_left'] + coordinate['left']) * SCALE
+    y = (coordinate['offset_top'] + coordinate['top']) * SCALE
     xy = (x, y)
     draw.text(xy, text, align='left', font=font, fill=fill)
 
@@ -110,7 +117,7 @@ def convert_to_base64(image):
 
 
 def get_logo_image(width):
-    width = width * get_size()
+    width = width * SCALE
     logo_address = get_contents_folder() + r'/logo.png'
     logo_image = Image.open(logo_address)
     logo_width, logo_height = logo_image.size
@@ -150,16 +157,16 @@ def get_center_middle_image_box(image, coordinate):
 
     # height / width
     image_width, image_height = image.size
-    image_width = image_width / get_size()
-    image_height = image_height / get_size()
+    image_width = image_width / SCALE
+    image_height = image_height / SCALE
     
     # center / middle
     image_margin_center = (width - image_width) / 2
     image_margin_middle = (height - image_height) / 2
 
     # box
-    box_left = round(image_margin_center + offset_left + left) * get_size()
-    box_top = round(image_margin_middle + offset_top + top) * get_size()
+    box_left = round(image_margin_center + offset_left + left) * SCALE
+    box_top = round(image_margin_middle + offset_top + top) * SCALE
     box = (box_left, box_top)
 
     return box
@@ -305,10 +312,10 @@ def draw_rectangle(image, width, height, top, left, fill, outline, stroke):
 
 def get_coordinate(width, height, left, top):
     # Aplica o fator de escala ao tamanho e posição
-    width_scaled = width * get_size()
-    height_scaled = height * get_size()
-    left_scaled = left * get_size()
-    top_scaled = top * get_size()
+    width_scaled = width * SCALE
+    height_scaled = height * SCALE
+    left_scaled = left * SCALE
+    top_scaled = top * SCALE
 
     # Calcula o canto superior esquerdo (x0, y0) e canto inferior direito (x1, y1)
     x0, y0 = left_scaled, top_scaled  # Canto superior esquerdo
@@ -329,3 +336,60 @@ def add_margin(image):
     result = Image.new(image.mode, (new_width, new_height), (255, 255, 255))
     result.paste(image, (left, top))
     return result
+
+
+def save_file(result, save_file):
+    if save_file:
+        if result['success']:
+            generated_files_saved_path = BASE_DIR / 'generated_files_saved'
+            generated_files_saved_path.mkdir(parents=True, exist_ok=True)
+            file_path = generated_files_saved_path / result['filename']
+            with open(file_path, "wb") as image_file:
+                image_file.write(base64.b64decode(result['file_data']))
+
+
+def get_final_result(image):
+    result = {
+        'success': False,
+        'filename': None,
+        'error': None,
+    }
+    try:
+        byte_io = BytesIO()
+        image.save(byte_io, 'PNG')
+        filename = get_image_name()
+        file_io_values = byte_io.getvalue()
+        filename = filename + '.png'
+        file_data = encode_file_to_base64(file_io_values)
+        result['filename'] = filename
+        result['file_data'] = file_data
+        result['success'] = True
+    except Exception as e:
+        result['error'] = str(e)
+    return result
+
+
+def convert(image):
+    byte_io = BytesIO()
+    image.save(byte_io, 'PNG')
+    filename = get_image_name()
+    file_io_values =  byte_io.getvalue()
+    filename = filename + '.png'
+    file_data = encode_file_to_base64(file_io_values)
+    return filename, file_data
+
+
+def get_image_name():
+    now_format = '%Y_%m_%d_%H%M%S_%f'
+    now = datetime.datetime.now()
+    now_string = now.strftime(now_format)
+    layout_file_name = '{}_{}'.format('layout', now_string)
+    return layout_file_name
+
+
+def encode_file_to_base64(file_data):
+    file_base64_string = None
+    if file_data:
+        file_data_io = BytesIO(file_data)
+        file_base64_string = base64.b64encode(file_data_io.getvalue()).decode()
+    return file_base64_string

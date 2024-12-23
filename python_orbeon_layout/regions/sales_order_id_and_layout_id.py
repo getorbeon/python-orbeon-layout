@@ -1,7 +1,7 @@
 from ..utils import write_draw_rectangle, write_text_center
 
 
-def pid(image, context):
+def sales_order_id(image, context):
 
     # TITLE
     coordinate = {
@@ -29,14 +29,14 @@ def pid(image, context):
         'top': 0,
     }
     write_draw_rectangle(image, coordinate)
-    pid_value_text = context['pid']
-    pid_value_font = 'MYRIADPRO-BOLD.OTF'
-    pid_value_font_fill = '#000'
-    pid_value_font_size = 18
-    write_text_center(image, coordinate, pid_value_text, pid_value_font, pid_value_font_fill, pid_value_font_size)
+    sales_order_id_value_text = context['sales_order_id']
+    sales_order_id_value_font = 'MYRIADPRO-BOLD.OTF'
+    sales_order_id_value_font_fill = '#000'
+    sales_order_id_value_font_size = 18
+    write_text_center(image, coordinate, sales_order_id_value_text, sales_order_id_value_font, sales_order_id_value_font_fill, sales_order_id_value_font_size)
 
 
-def layout(image, context):
+def layout_id(image, context):
 
     # TITLE
     coordinate = {
@@ -64,7 +64,7 @@ def layout(image, context):
         'top': 0,
     }
     write_draw_rectangle(image, coordinate)
-    layout_value_text = context['layout']
+    layout_value_text = context['layout_id']
     layout_value_font = 'MYRIADPRO-BOLD.OTF'
     layout_value_font_fill = '#000'
     layout_value_font_size = 18
