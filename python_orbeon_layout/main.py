@@ -3,17 +3,9 @@ from .regions.financial import financial
 from .regions.logo import logo
 from .regions.body import body
 from .regions.shipping import shipping
-from .regions.cliente_responsavel import (
-	cliente,
-	responsavel
-)
-from .regions.data_inicio_conclusao import (
-	data_inicio, data_conclusao
-)
-from .regions.sales_order_id_and_layout_id import (
-	sales_order_id,
-	layout_id
-)
+from .regions.cliente_responsavel import cliente, responsavel
+from .regions.data_inicio_conclusao import data_inicio, data_conclusao
+from .regions.sales_order_id_and_layout_id import sales_order_id, layout_id
 from .utils import (
 	add_margin,
 	save_file as save_file_,
@@ -22,7 +14,7 @@ from .utils import (
 )
 
 
-def draw(context_raw, save_file=False):
+def layout_draw(context_raw, save_file=False):
 	context = get_context_clean(context_raw)
 	a4 = a4i()
 	sales_order_id(a4, context)

@@ -89,19 +89,13 @@ def break_fix(text, width, font, draw):
 
 
 def fit_text(img, coordinate, text, font, color):
-    
     width = img.size[0] - 2
-    
     draw = ImageDraw.Draw(img)
-    
     pieces = list(break_fix(text, width, font, draw))
-
     height = sum(p[2] for p in pieces)
-    
     if height > img.size[1]:
         raise ValueError("text doesn't fit")
     y = (img.size[1] - height) // 2
-
     for t, w, h in pieces:
         x = (img.size[0] - w) // 2
         draw.text((x, y), t, align='left', font=font, fill=color)
@@ -146,7 +140,6 @@ def resize_image(image, width):
 
 
 def get_center_middle_image_box(image, coordinate):
-
     # coordinate
     width = coordinate['width']
     height = coordinate['height']
@@ -154,21 +147,17 @@ def get_center_middle_image_box(image, coordinate):
     left = coordinate['left']
     offset_left = coordinate['offset_left']
     offset_top = coordinate['offset_top']
-
     # height / width
     image_width, image_height = image.size
     image_width = image_width / SCALE
     image_height = image_height / SCALE
-    
     # center / middle
     image_margin_center = (width - image_width) / 2
     image_margin_middle = (height - image_height) / 2
-
     # box
     box_left = round(image_margin_center + offset_left + left) * SCALE
     box_top = round(image_margin_middle + offset_top + top) * SCALE
     box = (box_left, box_top)
-
     return box
 
 
@@ -180,16 +169,13 @@ def get_center_middle_image_box_a(image, coordinate, scale=1):
     left = coordinate['left']
     offset_left = coordinate['offset_left']
     offset_top = coordinate['offset_top']
-
     # Tamanho da imagem ajustado pelo fator de escala
     image_width, image_height = image.size
     image_width /= scale
     image_height /= scale
-
     # Calcular margens centralizadas
     image_margin_center = (width - image_width) / 2
     image_margin_middle = (height - image_height) / 2
-
     # Calcular posição da caixa
     box_left = round(image_margin_center + offset_left + left)
     box_top = round(image_margin_middle + offset_top + top)
@@ -206,22 +192,18 @@ def get_center_middle_image_box_b(image, coordinate):
     left = coordinate['left']
     offset_left = coordinate['offset_left']
     offset_top = coordinate['offset_top']
-
     # Tamanho da imagem considerando escala
     scale = 1  # ajuste o valor conforme necessário
     image_width, image_height = image.size
     image_width /= scale
     image_height /= scale
-
     # Cálculo de centralização
     image_margin_center = (width - image_width) / 2
     image_margin_middle = (height - image_height) / 2
-
     # Posição da caixa
     box_left = round(image_margin_center + offset_left + left) * scale
     box_top = round(image_margin_middle + offset_top + top) * scale
     box = (box_left, box_top)
-
     return box
 
 
@@ -257,46 +239,36 @@ def write_draw_rectangle(image, coordinate):
     # Margin (posição inicial do retângulo)
     margin_left = coordinate['left']
     margin_top = coordinate['top']
-
     # Offsets (ajustes adicionais)
     offset_top = coordinate['offset_top']
     offset_left = coordinate['offset_left']
-
     # Calcula a posição inicial do retângulo aplicando margem e offset
     top = margin_top + offset_top
     left = margin_left + offset_left
-
     # Define a largura e altura do retângulo sem somar os offsets
     width = coordinate['width']
     height = coordinate['height']
-
     # Estilo do retângulo
     fill = '#fff'
     outline = '#000'
     stroke = 1
-
     # Chama a função draw_rectangle com os valores corretos
     draw_rectangle(image, width, height, top, left, fill, outline, stroke)
-
 
 
 def write_draw_rectangle_style(image, coordinate, style):
     # Margin (posição inicial do retângulo)
     margin_left = coordinate['left']
     margin_top = coordinate['top']
-
     # Offsets (ajustes adicionais)
     offset_top = coordinate['offset_top']
     offset_left = coordinate['offset_left']
-
     # Calcula a posição inicial do retângulo aplicando margem e offset
     top = margin_top + offset_top
     left = margin_left + offset_left
-
     # Define a largura e altura do retângulo sem somar os offsets
     width = coordinate['width']
     height = coordinate['height']
-
     # style
     fill = style['fill']
     outline = style['outline']
@@ -316,11 +288,9 @@ def get_coordinate(width, height, left, top):
     height_scaled = height * SCALE
     left_scaled = left * SCALE
     top_scaled = top * SCALE
-
     # Calcula o canto superior esquerdo (x0, y0) e canto inferior direito (x1, y1)
     x0, y0 = left_scaled, top_scaled  # Canto superior esquerdo
     x1, y1 = x0 + width_scaled, y0 + height_scaled  # Canto inferior direito
-
     # Retorna os pontos na ordem correta para o Pillow
     return [(x0, y0), (x1, y1)]
 
@@ -345,7 +315,7 @@ def save_file(result, save_file):
             generated_files_saved_path.mkdir(parents=True, exist_ok=True)
             file_path = generated_files_saved_path / result['filename']
             with open(file_path, "wb") as image_file:
-                image_file.write(base64.b64decode(result['file_data']))
+                image_file.write(result['data'].getvalue())
 
 
 def get_final_result(image):
@@ -357,12 +327,8 @@ def get_final_result(image):
     try:
         byte_io = BytesIO()
         image.save(byte_io, 'PNG')
-        filename = get_image_name()
-        file_io_values = byte_io.getvalue()
-        filename = filename + '.png'
-        file_data = encode_file_to_base64(file_io_values)
-        result['filename'] = filename
-        result['file_data'] = file_data
+        result['filename'] = get_image_name('.png')
+        result['data'] = byte_io
         result['success'] = True
     except Exception as e:
         result['error'] = str(e)
@@ -372,18 +338,19 @@ def get_final_result(image):
 def convert(image):
     byte_io = BytesIO()
     image.save(byte_io, 'PNG')
-    filename = get_image_name()
+    filename = get_image_name('.png')
     file_io_values =  byte_io.getvalue()
-    filename = filename + '.png'
     file_data = encode_file_to_base64(file_io_values)
     return filename, file_data
 
 
-def get_image_name():
+def get_image_name(extension=None):
     now_format = '%Y_%m_%d_%H%M%S_%f'
     now = datetime.datetime.now()
     now_string = now.strftime(now_format)
     layout_file_name = '{}_{}'.format('layout', now_string)
+    if extension:
+        layout_file_name = layout_file_name + extension
     return layout_file_name
 
 

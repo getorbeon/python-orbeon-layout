@@ -1,11 +1,8 @@
-import base64
-from io import BytesIO
 from PIL import Image
 from ..utils import (SCALE, write_draw_rectangle)
 
 
 def logo(image, context):
-    logo_base64 = context['logo_base64']
     coordinate = {
         'width': 35,
         'height': 29,
@@ -15,20 +12,18 @@ def logo(image, context):
         'top': 0,
     }
     write_draw_rectangle(image, coordinate)
-    logo_insert(image, coordinate, logo_base64)
+    logo_insert(image, coordinate, context['logo_bytesio'])
 
 
-def logo_insert(image, coordinate, logo_base64):
-    logo_image = get_logo_image(logo_base64, coordinate['width'])
-    box = get_center_middle_image_box(logo_image, coordinate)
+def logo_insert(image, coordinate, logo_bytesio):
+    logo_image = get_logo_image(logo_bytesio, coordinate['width'])
     box = get_center_middle_image_box(logo_image, coordinate)
     image.paste(logo_image, box)
 
 
-def get_logo_image(logo_base64, width):
+def get_logo_image(logo_bytesio, width):
     width = width - 8
-    logo_base64_bytes = base64.b64decode(logo_base64)
-    logo_image = Image.open(BytesIO(logo_base64_bytes))
+    logo_image = Image.open(logo_bytesio)
     logo_width, logo_height = logo_image.size
     logo_ratio = logo_width / logo_height
     logo_width_new = width * SCALE

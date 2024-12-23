@@ -1,5 +1,3 @@
-import base64
-from io import BytesIO
 from PIL import Image
 
 
@@ -26,16 +24,15 @@ def body(image, context):
 def body_image_insert(image, coordinate, context):
     width_ = coordinate['width'] - 2
     height_ = coordinate['height'] - 2
-    body_image_base64 = context['body_base64']
-    body_image = get_body_image(body_image_base64, width_, height_)
+    body_bytesio = context['body_bytesio']
+    body_image = get_body_image(body_bytesio, width_, height_)
     box = get_center_middle_image_box(body_image, coordinate)
     image.paste(body_image, box)
 
 
-def get_body_image(body_image_base64, width, height):
-    if body_image_base64:
-        body_image_base64_bytes = base64.b64decode(body_image_base64)
-        body_image = Image.open(BytesIO(body_image_base64_bytes))
+def get_body_image(body_bytesio, width, height):
+    if body_bytesio:
+        body_image = Image.open(body_bytesio)
     else:
         raise Exception('Não é possível gerar o layout, pois não há uma imagem para o corpo do layout.')
     body_image_adjusted = body_image_adjust(body_image, width, height)

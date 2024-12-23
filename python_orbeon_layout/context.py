@@ -11,8 +11,8 @@ def get_context_clean(context_raw):
     'customer_contact':     get_cliente_contato(context_raw),
     'responsible_name':     get_responsavel_nome(context_raw),
     'responsible_contact':  get_responsavel_contato(context_raw),
-    'body_base64':          context_raw['body_image_base64'],
-    'logo_base64':          context_raw['logo_image_base64'],
+    'body_bytesio':         context_raw['body_bytesio'],
+    'logo_bytesio':         context_raw['logo_bytesio'],
     'financial':            context_raw['financeiro'].upper().strip(),
     'shipping':             context_raw['shipping'],
   }

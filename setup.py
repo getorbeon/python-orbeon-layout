@@ -12,7 +12,7 @@ setup(
             "contents/fonts/*.otf",
         ],
     },
-    description="Uma biblioteca simples e independente para geração de layouts padronizados em formatos PDF e imagem.",
+    description="Uma biblioteca simples e independente para geração de layouts padronizados em formato de imagem.",
     author="Edu Fontes",
     author_email="eduramofo@gmail.com",
     url="https://github.com/getorbeon/python-orbeon-layout",
